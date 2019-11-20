@@ -22,7 +22,7 @@ if(array_key_exists(0,$check_unconfirmed['unconfirmedTransactionIds']) || !$chec
 	error_(1,'Transaction is waiting to be submitted to a forged block'.$check_unconfirmed);
 }
 
-// Check if IP has just activated another account (Standard: 240 secound)
+// Check if IP has just activated another account (Standard: 240 seconds)
 if($memcached->get('api_activate_'.$_SERVER['REMOTE_ADDR']))error_(0,'You are activating too often');
 
 // Execute the activation
