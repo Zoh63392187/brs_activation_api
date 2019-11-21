@@ -10,14 +10,14 @@ $passphrase = ''; // Enter you passphrase for your paying wallet here
 // Message sent to the user activating their account
 $message = "Welcome%20to%20Burst!%20We%20(BMF)%20have%20activated%20your%20account%20and%20also%20given%20you%20Burst%20so%20you%20can%20make%20your%20first%20reward%20assignment.%20Feel%20free%20to%20join%20our%20pool%20and%20start%20earning%20Burst%20today.%20Read%20more%20at:%20https://bmf50pool.burstcoin.ro/%20or%20https://0-100pool.burstcoin.ro/";
 
-$public_key = call_api($url.'burst?requestType=getAccountPublicKey&account='.$_GET['acc']);
+$public_key = call_api($url.'burst?requestType=getAccountPublicKey&account='.htmlentities($_GET['acc']));
 // Check if API is avaliable
 if(!$public_key)error_(1,'API unavailable!');
 // Check if account is already activated
 if($public_key['publicKey'])error_(1,'Already activated');
 
 // Checking if there is a pending activation for this account
-$check_unconfirmed = call_api($url.'burst?requestType=getUnconfirmedTransactionIds&account='.$_GET['acc']);
+$check_unconfirmed = call_api($url.'burst?requestType=getUnconfirmedTransactionIds&account='.htmlentities($_GET['acc']));
 if(array_key_exists(0,$check_unconfirmed['unconfirmedTransactionIds']) || !$check_unconfirmed){
 	error_(1,'Transaction is waiting to be submitted to a forged block'.$check_unconfirmed);
 }
@@ -26,7 +26,7 @@ if(array_key_exists(0,$check_unconfirmed['unconfirmedTransactionIds']) || !$chec
 if($memcached->get('api_activate_'.$_SERVER['REMOTE_ADDR']))error_(0,'You are activating too often');
 
 // Execute the activation
-$result = call_api($url."burst?requestType=sendMoney&recipient=".$_GET['acc']."&amountNQT=735000&secretPhrase=".$passphrase."&feeNQT=735000&deadline=1440&message=".$message."&recipientPublicKey=".$_GET['pkey']);
+$result = call_api($url."burst?requestType=sendMoney&recipient=".htmlentities($_GET['acc'])."&amountNQT=735000&secretPhrase=".$passphrase."&feeNQT=735000&deadline=1440&message=".$message."&recipientPublicKey=".htmlentities($_GET['pkey']));
 
 // If BRS returns an error - return that to the user.
 if($result['errorCode'])error_(1,'Error code:'.$result['errorCode'].', description: '.$result['errorDescription']);
